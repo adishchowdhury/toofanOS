@@ -1,0 +1,6 @@
+{
+  "name": "CycloneOS — Anticipatory Action Compiler",
+  "description": "From forecast to action before impact. Geospatial hazard intelligence compiler generating time-bound, role-specific decisions and parametric triggers for coastal infrastructure.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

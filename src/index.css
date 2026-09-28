@@ -1,0 +1,149 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --ink: #050B14;
+    --deep-ocean: #091525;
+    --midnight: #0D1C2D;
+    --storm: #12253A;
+    --muted-blue: #203A55;
+    --slate: #6F8296;
+
+    --ivory: #F1EBDD;
+    --paper: #D8CEB9;
+
+    --gold: #C7A45D;
+    --gold-bright: #E2C98A;
+    --gold-muted: #8D7548;
+
+    --cyan: #65D9E8;
+    --blue: #5A8CFF;
+
+    --amber: #E7A84A;
+    --danger: #D95757;
+    --success: #63C69A;
+  }
+
+  body {
+    background-color: var(--ink);
+    color: var(--ivory);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+}
+
+.font-serif {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+.font-cinzel {
+  font-family: 'Cinzel', serif;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.font-script {
+  font-family: 'Parisienne', 'Cormorant Garamond', Georgia, cursive, italic;
+}
+
+/* Subtle cartographic grid background */
+.carto-grid {
+  background-size: 48px 48px;
+  background-image: 
+    linear-gradient(to right, rgba(101, 217, 232, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(101, 217, 232, 0.04) 1px, transparent 1px);
+}
+
+.carto-grid-dense {
+  background-size: 24px 24px;
+  background-image: 
+    linear-gradient(to right, rgba(199, 164, 93, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(199, 164, 93, 0.05) 1px, transparent 1px);
+}
+
+/* Atmospheric subtle scanlines and noise */
+.film-grain {
+  background-image: radial-gradient(rgba(101, 217, 232, 0.08) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+/* Nautical contour ring animation */
+@keyframes nautical-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.6;
+  }
+}
+
+.animate-nautical-pulse {
+  animation: nautical-pulse 6s ease-in-out infinite;
+}
+
+/* Radar sweep animation */
+@keyframes radar-sweep {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-radar {
+  animation: radar-sweep 14s linear infinite;
+}
+
+/* Wave surge pulsing */
+@keyframes surge-pulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(1.03);
+  }
+}
+
+.animate-surge {
+  animation: surge-pulse 4.5s ease-in-out infinite;
+}
+
+/* Voice pulse wave */
+@keyframes voice-wave {
+  0%, 100% {
+    height: 6px;
+  }
+  50% {
+    height: 20px;
+  }
+}
+
+.animate-voice-bar-1 { animation: voice-wave 0.8s ease-in-out infinite 0.1s; }
+.animate-voice-bar-2 { animation: voice-wave 0.8s ease-in-out infinite 0.3s; }
+.animate-voice-bar-3 { animation: voice-wave 0.8s ease-in-out infinite 0.2s; }
+.animate-voice-bar-4 { animation: voice-wave 0.8s ease-in-out infinite 0.4s; }
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #091525;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #12253A;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #C7A45D;
+}
