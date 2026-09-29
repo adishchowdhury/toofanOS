@@ -44,7 +44,7 @@ interface GoogleMapViewProps {
 
 // Fallback to user-provided key if env var is not yet reloaded by dev server
 const GOOGLE_MAPS_API_KEY = 
-  import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyAgykiYAhn1oBkSnQ1_rva539lqP067f74';
+  import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 // Component that handles Polylines and Circles directly on the Google Map instance
 const CycloneVectorOverlays: React.FC<{
