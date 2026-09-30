@@ -203,6 +203,40 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
     zoom: null
   });
 
+  // User live GPS location
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [isLocating, setIsLocating] = useState<boolean>(false);
+
+  const handleLocateUser = () => {
+    setIsLocating(true);
+    if (!navigator.geolocation) {
+      setIsLocating(false);
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const coords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        setUserLocation(coords);
+        setCameraTarget({ center: coords, zoom: 13 });
+        setIsLocating(false);
+      },
+      () => {
+        fetch('https://ipapi.co/json/')
+          .then(res => res.json())
+          .then(d => {
+            if (d.latitude && d.longitude) {
+              const coords = { lat: parseFloat(d.latitude), lng: parseFloat(d.longitude) };
+              setUserLocation(coords);
+              setCameraTarget({ center: coords, zoom: 12 });
+            }
+          })
+          .catch(() => {})
+          .finally(() => setIsLocating(false));
+      },
+      { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
+    );
+  };
+
   // Layer toggles
   const [layers, setLayers] = useState({
     surgeInundation: true,
@@ -297,6 +331,18 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
               title="Regional overview"
             >
               REGIONAL
+            </button>
+            <button
+              onClick={handleLocateUser}
+              className={`px-2.5 py-1 text-[10px] font-mono rounded transition-colors flex items-center gap-1 cursor-pointer ${
+                userLocation 
+                  ? 'bg-cyan-500/20 text-[#65D9E8] font-bold border border-cyan-400/40' 
+                  : 'text-[#D8CEB9] hover:text-[#65D9E8] hover:bg-[#0D1C2D]'
+              }`}
+              title="Detect and fly to your exact GPS coordinates"
+            >
+              <Navigation className={`w-3 h-3 ${isLocating ? 'animate-spin text-[#65D9E8]' : 'text-[#65D9E8]'}`} />
+              <span>{isLocating ? 'LOCKING GPS...' : 'MY GPS'}</span>
             </button>
           </div>
 
@@ -458,6 +504,22 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
                   {/* Badge floating above eye */}
                   <div className="absolute left-1/2 -translate-x-1/2 -top-8 px-2 py-0.5 bg-[#050B14]/95 border border-[#D95757] rounded text-[9px] font-mono font-bold text-[#F1EBDD] whitespace-nowrap shadow-xl">
                     <span>{currentTrackPoint.windSpeedKmh} km/h · {currentTrackPoint.stage || scenario.category}</span>
+                  </div>
+                </div>
+              </AdvancedMarker>
+            )}
+
+            {/* User Live GPS Marker */}
+            {userLocation && (
+              <AdvancedMarker
+                position={userLocation}
+                title="Your Current GPS Position"
+              >
+                <div className="relative flex items-center justify-center">
+                  <span className="w-6 h-6 rounded-full bg-cyan-400 opacity-75 animate-ping absolute" />
+                  <div className="relative px-2 py-1 rounded-full bg-[#050B14] border border-cyan-400 text-[10px] font-mono font-bold text-cyan-300 shadow-[0_0_15px_#65D9E8] flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-cyan-400" />
+                    <span>YOU ARE HERE</span>
                   </div>
                 </div>
               </AdvancedMarker>

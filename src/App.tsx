@@ -23,6 +23,7 @@ import { CinematicLanding } from './components/CinematicLanding';
 import { ModelDisclosureModal } from './components/ModelDisclosureModal';
 import { JudgeTourOverlay } from './components/JudgeTourOverlay';
 import { UpcomingCycloneModal } from './components/UpcomingCycloneModal';
+import { CitizenLifelineView } from './components/CitizenLifelineView';
 import { playRadarPing, playDispatchChime, playAlertWarning } from './utils/audio';
 
 export default function App() {
@@ -352,6 +353,7 @@ export default function App() {
           onEnterCommand={() => setActiveTab('command')}
           onLaunchDemoWalkthrough={startJudgeWalkthrough}
           onSelectReplayScenario={handleSelectScenario}
+          onEnterCitizenMode={() => setActiveTab('citizen')}
         />
         <ModelDisclosureModal
           isOpen={showModelDisclosure}
@@ -509,6 +511,14 @@ export default function App() {
           {activeTab === 'audit' && (
             <AuditTrailView
               auditLogs={auditLogs}
+            />
+          )}
+
+          {/* TAB 8: CITIZEN LIFELINE & SURGE WARN SCOUT */}
+          {activeTab === 'citizen' && (
+            <CitizenLifelineView
+              scenario={currentScenario}
+              onReturnToEoc={() => setActiveTab('command')}
             />
           )}
         </main>

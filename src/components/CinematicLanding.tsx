@@ -12,7 +12,8 @@ import {
   Home, 
   Award,
   Layers,
-  Wind
+  Wind,
+  LifeBuoy
 } from 'lucide-react';
 import { CycloneScenario } from '../types/cyclone';
 
@@ -21,13 +22,15 @@ interface CinematicLandingProps {
   onEnterCommand: () => void;
   onLaunchDemoWalkthrough: () => void;
   onSelectReplayScenario: (scenarioId: string) => void;
+  onEnterCitizenMode?: () => void;
 }
 
 export const CinematicLanding: React.FC<CinematicLandingProps> = ({
   scenario,
   onEnterCommand,
   onLaunchDemoWalkthrough,
-  onSelectReplayScenario
+  onSelectReplayScenario,
+  onEnterCitizenMode
 }) => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
@@ -132,11 +135,23 @@ export const CinematicLanding: React.FC<CinematicLandingProps> = ({
 
             <button
               onClick={onLaunchDemoWalkthrough}
-              className="px-5 py-3.5 rounded-sm bg-[#091525] hover:bg-[#12253A] text-[#F1EBDD] border border-[#12253A] hover:border-[#65D9E8] font-mono text-xs tracking-wider flex items-center gap-2 transition-all shadow-md"
+              className="px-5 py-3.5 rounded-sm bg-[#091525] hover:bg-[#12253A] text-[#F1EBDD] border border-[#12253A] hover:border-[#65D9E8] font-mono text-xs tracking-wider flex items-center gap-2 transition-all shadow-md cursor-pointer"
             >
               <Play className="w-3.5 h-3.5 text-[#65D9E8] fill-[#65D9E8]" />
               <span>LAUNCH 2-MIN WALKTHROUGH</span>
             </button>
+
+            {/* Citizen Lifeline & Ground Scout Trigger */}
+            {onEnterCitizenMode && (
+              <button
+                onClick={onEnterCitizenMode}
+                className="px-5 py-3.5 rounded-sm bg-rose-950/40 hover:bg-rose-900/60 text-rose-200 border border-rose-500/50 hover:border-rose-400 font-mono text-xs tracking-wider flex items-center gap-2 transition-all shadow-md cursor-pointer group"
+                title="Citizen Lifeline: Detect your location, find safe shelter, or report rising water"
+              >
+                <LifeBuoy className="w-4 h-4 text-rose-400 group-hover:rotate-45 transition-transform" />
+                <span className="font-bold">CITIZEN LIFELINE / REPORT SURGE</span>
+              </button>
+            )}
           </div>
 
           {/* Core Roles Indicator */}

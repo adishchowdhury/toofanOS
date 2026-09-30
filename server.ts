@@ -870,6 +870,60 @@ app.post('/api/dispatch', (req, res) => {
   });
 });
 
+// In-Memory store for crowdsourced citizen SOS ground alerts
+const citizenReports: any[] = [
+  {
+    id: 'SOS-091',
+    timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
+    lat: 21.628,
+    lon: 87.521,
+    category: 'surge_dike_breach',
+    waterDepthM: 1.4,
+    notes: 'Digha Old Sea Dike section 3 breach. Water rushing into New Digha market street.',
+    reporterName: 'Sunil Mondal',
+    phone: '+91 98301 XXXXX',
+    status: 'VERIFIED'
+  },
+  {
+    id: 'SOS-092',
+    timestamp: new Date(Date.now() - 8 * 60 * 1000).toISOString(),
+    lat: 21.674,
+    lon: 87.712,
+    category: 'flooding',
+    waterDepthM: 0.9,
+    notes: 'Mandarmani fishing village road submerged. 45 villagers awaiting NDRF boat.',
+    reporterName: 'Anjali Das',
+    phone: '+91 94332 XXXXX',
+    status: 'RESCUE_EN_ROUTE'
+  }
+];
+
+app.get('/api/citizen-reports', (req, res) => {
+  res.json({ success: true, count: citizenReports.length, reports: citizenReports });
+});
+
+app.post('/api/citizen-sos', (req, res) => {
+  const { lat, lon, category, waterDepthM, notes, reporterName, phone } = req.body;
+  const newReport = {
+    id: `SOS-${Math.floor(100 + Math.random() * 900)}`,
+    timestamp: new Date().toISOString(),
+    lat: Number(lat) || 21.63,
+    lon: Number(lon) || 87.53,
+    category: category || 'surge_dike_breach',
+    waterDepthM: Number(waterDepthM) || 0.8,
+    notes: notes || 'Citizen ground alert submitted via ToofanOS Lifeline.',
+    reporterName: reporterName || 'Anonymous Citizen',
+    phone: phone || 'N/A',
+    status: 'PENDING_DISPATCH'
+  };
+  citizenReports.unshift(newReport);
+  res.json({
+    success: true,
+    message: '🚨 Emergency SOS broadcast successfully received at DEOC Command Center.',
+    report: newReport
+  });
+});
+
 // Setup Vite in Dev or Static in Production
 async function startServer() {
   if (process.env.NODE_ENV === 'production') {

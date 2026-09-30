@@ -11,7 +11,8 @@ import {
   Radio,
   Satellite,
   Cpu,
-  Mic
+  Mic,
+  LifeBuoy
 } from 'lucide-react';
 
 interface SideNavProps {
@@ -36,7 +37,8 @@ export const SideNav: React.FC<SideNavProps> = ({
     { id: 'dispatch', label: 'Role Dispatches', sub: 'MUNICIPAL / HOSP / GRID', icon: Send, count: dispatchesCount },
     { id: 'infrastructure', label: 'Infrastructure', sub: 'CRITICALITY GRAPH', icon: Building2 },
     { id: 'insurance', label: 'Parametric Insurance', sub: 'TRIGGER CERTIFICATE', icon: ShieldCheck, accent: true },
-    { id: 'audit', label: 'Audit Trail', sub: 'INPUT HASHES & PROVENANCE', icon: FileText }
+    { id: 'audit', label: 'Audit Trail', sub: 'INPUT HASHES & PROVENANCE', icon: FileText },
+    { id: 'citizen', label: 'Citizen Lifeline', sub: 'GPS SOS & GROUND SCOUT', icon: LifeBuoy, highlight: true }
   ];
 
   return (

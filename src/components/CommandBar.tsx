@@ -13,7 +13,9 @@ import {
   Radio, 
   CheckCircle2, 
   AlertCircle,
-  Compass
+  Compass,
+  X,
+  LifeBuoy
 } from 'lucide-react';
 import { CycloneScenario } from '../types/cyclone';
 import { VoiceCommandModal } from './VoiceCommandModal';
@@ -258,14 +260,24 @@ export const CommandBar: React.FC<CommandBarProps> = ({
 
   return (
     <header className="h-16 border-b border-[#12253A] bg-[#050B14]/95 backdrop-blur-md px-4 lg:px-6 flex items-center justify-between z-30 select-none relative">
-      {/* Voice feedback toast strip */}
+      {/* Voice feedback toast strip with dismiss button */}
       {voiceFeedback && (
-        <div className="absolute top-16 left-1/2 -translate-x-1/2 z-50 bg-[#0D1C2D] border border-[#C7A45D] px-4 py-1.5 rounded-sm shadow-2xl flex items-center gap-2.5 text-xs font-mono text-[#F1EBDD] animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute top-16 left-1/2 -translate-x-1/2 z-50 bg-[#0D1C2D] border border-[#C7A45D] pl-3.5 pr-2 py-1.5 rounded-sm shadow-2xl flex items-center gap-2.5 text-xs font-mono text-[#F1EBDD] animate-in fade-in slide-in-from-top-2 duration-200">
           <Radio className="w-3.5 h-3.5 text-[#65D9E8] animate-pulse" />
           <span className="font-semibold text-[#E2C98A]">{voiceFeedback}</span>
           {voiceTranscript && (
             <span className="text-[#6F8296] italic text-[11px]">"{voiceTranscript}"</span>
           )}
+          <button
+            onClick={() => {
+              setVoiceFeedback(null);
+              setVoiceTranscript('');
+            }}
+            className="ml-2 p-1 text-[#6F8296] hover:text-[#F1EBDD] hover:bg-white/10 rounded transition-colors cursor-pointer"
+            title="Dismiss voice notification"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
         </div>
       )}
 
@@ -384,6 +396,20 @@ export const CommandBar: React.FC<CommandBarProps> = ({
             <span className="hidden sm:inline text-[11px]">VOICE DIRECTIVES</span>
           </button>
         </div>
+
+        {/* Citizen Mode / Gov EOC Mode Toggle */}
+        <button
+          onClick={() => setActiveTab(activeTab === 'citizen' ? 'command' : 'citizen')}
+          className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-sm border text-xs font-mono font-bold tracking-wider transition-all cursor-pointer ${
+            activeTab === 'citizen'
+              ? 'bg-[#091525] border-[#65D9E8] text-[#65D9E8]'
+              : 'bg-rose-950/40 border-rose-500/50 hover:border-rose-400 text-rose-200'
+          }`}
+          title={activeTab === 'citizen' ? "Return to EOC Command Center" : "Switch to Citizen Lifeline & Ground Scout"}
+        >
+          <LifeBuoy className="w-3.5 h-3.5 text-rose-400" />
+          <span className="hidden md:inline">{activeTab === 'citizen' ? 'GOV EOC DESK' : 'CITIZEN SOS'}</span>
+        </button>
 
         {/* Judge 2-Minute Guided Tour Button */}
         <button
