@@ -26,6 +26,10 @@ import {
   Satellite
 } from 'lucide-react';
 import { CycloneScenario } from '../types/cyclone';
+import { 
+  saveCitizenReportToFirestore, 
+  subscribeToCitizenReports 
+} from '../lib/firebase';
 
 interface CitizenLifelineViewProps {
   scenario: CycloneScenario;
@@ -322,9 +326,25 @@ export const CitizenLifelineView: React.FC<CitizenLifelineViewProps> = ({
     );
   };
 
-  // Auto-acquire on mount
+  // Auto-acquire on mount & subscribe to real-time Firestore reports
   useEffect(() => {
     requestGpsLocation();
+
+    const unsubscribe = subscribeToCitizenReports((firestoreReports) => {
+      if (firestoreReports && firestoreReports.length > 0) {
+        setGroundReports(firestoreReports.map(r => ({
+          id: r.id,
+          time: new Date(r.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          location: r.notes || `Lat ${r.lat.toFixed(3)}°, Lon ${r.lon.toFixed(3)}°`,
+          category: r.category === 'surge_dike_breach' ? 'Sea Dike Overtopped' : 'Rising Water Inundation',
+          depth: `${r.waterDepthM}m`,
+          status: r.status,
+          urgency: r.waterDepthM > 1.2 ? 'CRITICAL' : 'HIGH'
+        })));
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
   // Handle Search for Custom Coastal Point
@@ -390,6 +410,21 @@ export const CitizenLifelineView: React.FC<CitizenLifelineViewProps> = ({
       };
 
       setSubmissionReceipt(receipt);
+
+      // Persist directly to Firebase Firestore
+      await saveCitizenReportToFirestore({
+        id: receipt.id,
+        timestamp: new Date().toISOString(),
+        lat: userCoords.lat,
+        lon: userCoords.lon,
+        category: reportCategory,
+        waterDepthM,
+        notes: citizenNotes || `Direct ground report from ${locationName}. Observed water rise & storm surge.`,
+        reporterName: reporterName || 'Local Resident',
+        phone: reporterPhone || 'Not provided',
+        status: 'PENDING_DISPATCH',
+        distanceToEyeKm
+      });
 
       setGroundReports(prev => [
         {

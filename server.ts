@@ -147,104 +147,124 @@ async function generateWithModelCascade(params: {
 }
 
 // Fallback high-fidelity decisions if offline or rate-limited
-const getDeterministicDecisions = (scenarioName: string, timeToLandfall: number) => ({
-  municipal_dispatch: {
-    role: "Municipal Disaster Officer",
-    priority: "HIGH",
-    target_jurisdiction: "East Midnapore / Digha Coastal Belt",
-    time_window_remaining: "01:40:00",
-    actions: [
-      {
-        id: "mun-1",
-        action: "Begin Ward 4 & coastal fisherman colony evacuation staging",
-        deadline: "01:40",
-        urgency: "HIGH",
-        justification: "Surge inundation ETA is 03:08. Ward 4 shelter currently has 160 available capacities. Access routes cross 1.2m surge contour.",
-        resource_allocated: "4 Electric Coastal Transit Buses · 2 Emergency Vans",
-        lead_officer: "Officer S. Banerjee, Coastal Sector 3"
-      },
-      {
-        id: "mun-2",
-        action: "Deploy sandbag barriers along Digha storm drain sluice gates #4 and #7",
-        deadline: "02:30",
-        urgency: "MEDIUM",
-        justification: "Counteract back-flow saltwater penetration into freshwater agricultural ponds.",
-        resource_allocated: "Civil Defense Corps Unit 9 · 4,000 poly-weave sandbags",
-        lead_officer: "Irrigation Sub-Divisional Officer"
-      }
-    ]
-  },
-  hospital_dispatch: {
-    role: "Hospital Administrator",
-    priority: "CRITICAL",
-    target_facility: "District Hospital A (Digha Sub-Divisional Hospital)",
-    time_window_remaining: "02:10:00",
-    actions: [
-      {
-        id: "hosp-1",
-        action: "Prepare patient transfer corridor to Inland Base Hospital Contai",
-        deadline: "02:10",
-        urgency: "CRITICAL",
-        justification: "Primary coastal arterial highway NH-116B reaches surge vulnerability index 0.87 at T-04:12. NICU and ventilator patients must clear corridor before cut-off.",
-        resource_allocated: "6 Advanced Life Support (ALS) Ambulances · 1 Police Escort",
-        lead_officer: "Dr. A. Roy, Medical Superintendent"
-      },
-      {
-        id: "hosp-2",
-        action: "Elevate critical pharmaceuticals & activate rooftop diesel gen-set tank reserve",
-        deadline: "01:15",
-        urgency: "HIGH",
-        justification: "Ground floor flood threshold modeled at +1.4m. Substation B expected to de-energize by 03:08.",
-        resource_allocated: "Hospital Facilities Engineering Team (4 technicians)",
-        lead_officer: "Chief Pharmacist & Facilities Engineer"
-      }
-    ]
-  },
-  grid_dispatch: {
-    role: "Grid Operator",
-    priority: "HIGH",
-    target_grid: "WBSEDCL Coastal Transmission Zone 4",
-    time_window_remaining: "01:05:00",
-    actions: [
-      {
-        id: "grid-1",
-        action: "Pre-position 500kVA mobile generator at District Hospital A & prepare Substation B sectional isolation",
-        deadline: "01:05",
-        urgency: "CRITICAL",
-        justification: "Substation B 33kV switchyard sits at +1.8m elevation; modeled surge breach is 2.4m at 03:08. Preemptive de-energizing prevents permanent transformer terminal damage while hospital continuity is preserved.",
-        resource_allocated: "WBSEDCL Emergency Crew Alpha · 1 Mobile Substation Trailer",
-        lead_officer: "Executive Engineer (Transmission)"
-      },
-      {
-        id: "grid-2",
-        action: "Isolate marine feeder lines 4A and 4B along the coastline",
-        deadline: "01:50",
-        urgency: "HIGH",
-        justification: "Prevent high-voltage arcing across inundated salt-water flood zones.",
-        resource_allocated: "Linesman Team 2",
-        lead_officer: "Substation Shift In-Charge"
-      }
-    ]
-  },
-  parametric_trigger: {
-    trigger_id: `CPT-AMPHAN-${Date.now().toString(36).toUpperCase()}`,
-    location: {
-      name: "Digha Coastal Gauge / Bay of Bengal Station 21.62°N, 87.50°E",
-      latitude: 21.6200,
-      longitude: 87.5000
+const getDeterministicDecisions = (scenarioName: string, timeToLandfall: number) => {
+  const isMocha = scenarioName.toLowerCase().includes('mocha');
+  const isDana = scenarioName.toLowerCase().includes('dana');
+  const cleanCode = isMocha ? 'MOCHA-2023' : isDana ? 'DANA-2026' : 'AMPHAN-2020';
+  const locationName = isMocha 
+    ? "Sittwe Marine Buoy 44002 / Bay of Bengal Station 20.15°N, 92.85°E"
+    : isDana
+    ? "Dhamra Port & Digha Coastal Tide Gauge Station 21.35°N, 87.45°E"
+    : "Digha Coastal Gauge / Bay of Bengal Station 21.62°N, 87.50°E";
+  const surgeHeight = isMocha ? 3.10 : isDana ? 2.65 : 2.42;
+  const lat = isMocha ? 20.15 : isDana ? 21.35 : 21.62;
+  const lon = isMocha ? 92.85 : isDana ? 87.45 : 87.50;
+  const payout = isMocha ? "$18,200,000" : isDana ? "$14,800,000" : "$12,500,000";
+  const beneficiary = isMocha
+    ? "Rakhine Coastal Emergency Liquidity & Rehabilitation Escrow"
+    : isDana
+    ? "State Disaster Mitigation Fund (SDMF) & Coastal Ward Relief"
+    : "Municipal Emergency Relief Fund & Coastal Infrastructure Repair Pool";
+
+  return {
+    municipal_dispatch: {
+      role: "Municipal Disaster Officer",
+      priority: "HIGH",
+      target_jurisdiction: isMocha ? "Sittwe & Coastal Harbor Reach" : isDana ? "Balasore / Digha Coastal Border" : "East Midnapore / Digha Coastal Belt",
+      time_window_remaining: "01:40:00",
+      actions: [
+        {
+          id: "mun-1",
+          action: `Begin coastal sector evacuation staging for ${scenarioName}`,
+          deadline: "01:40",
+          urgency: "HIGH",
+          justification: `Surge inundation ETA is imminent. Access routes cross ${surgeHeight}m surge contour.`,
+          resource_allocated: "4 Electric Coastal Transit Buses · 2 Emergency Vans",
+          lead_officer: "Officer S. Banerjee, Coastal Sector 3"
+        },
+        {
+          id: "mun-2",
+          action: "Deploy sandbag barriers along storm drain sluice gates",
+          deadline: "02:30",
+          urgency: "MEDIUM",
+          justification: "Counteract back-flow saltwater penetration into freshwater agricultural reservoirs.",
+          resource_allocated: "Civil Defense Corps Unit 9 · 4,000 poly-weave sandbags",
+          lead_officer: "Irrigation Sub-Divisional Officer"
+        }
+      ]
     },
-    hazard_type: "storm_surge_inundation",
-    simulated_surge_height_m: 2.42,
-    policy_threshold_m: 2.00,
-    breach: true,
-    confidence_level: "99.4%",
-    parametric_payout_usd: "$12,500,000",
-    payout_beneficiary: "Municipal Emergency Relief Fund & Coastal Infrastructure Repair Pool",
-    timestamp: new Date().toISOString(),
-    scenario_ref: scenarioName,
-    verification_hash: "0x8F94E1B3A09238D19F02C45877E90B427F2A3810DC25"
-  }
-});
+    hospital_dispatch: {
+      role: "Hospital Administrator",
+      priority: "CRITICAL",
+      target_facility: isMocha ? "Sittwe General Hospital" : isDana ? "Balasore District Emergency Hospital" : "District Hospital A (Digha Sub-Divisional Hospital)",
+      time_window_remaining: "00:55:00",
+      actions: [
+        {
+          id: "hosp-1",
+          action: "Prepare patient transfer corridor to Inland Base Hospital",
+          deadline: "02:10",
+          urgency: "CRITICAL",
+          justification: "Primary coastal arterial highway reaches surge vulnerability index 0.87. NICU and ventilator patients must clear corridor before cut-off.",
+          resource_allocated: "6 Advanced Life Support (ALS) Ambulances · 1 Police Escort",
+          lead_officer: "Dr. A. Roy, Medical Superintendent"
+        },
+        {
+          id: "hosp-2",
+          action: "Elevate critical pharmaceuticals & activate rooftop diesel gen-set tank reserve",
+          deadline: "01:15",
+          urgency: "HIGH",
+          justification: "Ground floor flood threshold modeled at +1.4m. Substation expected to de-energize by 03:08.",
+          resource_allocated: "Hospital Facilities Engineering Team (4 technicians)",
+          lead_officer: "Chief Pharmacist & Facilities Engineer"
+        }
+      ]
+    },
+    grid_dispatch: {
+      role: "Grid Operator",
+      priority: "HIGH",
+      target_grid: isMocha ? "Coastal Transmission Zone" : isDana ? "OPTCL / WBSEDCL Inter-State Intertie" : "WBSEDCL Coastal Transmission Zone 4",
+      time_window_remaining: "01:05:00",
+      actions: [
+        {
+          id: "grid-1",
+          action: "Pre-position 500kVA mobile generator at District Hospital & prepare Substation sectional isolation",
+          deadline: "01:05",
+          urgency: "CRITICAL",
+          justification: `Substation switchyard sits at low elevation; modeled surge breach is ${surgeHeight}m. Preemptive de-energizing prevents permanent transformer terminal damage while hospital continuity is preserved.`,
+          resource_allocated: "WBSEDCL Emergency Crew Alpha · 1 Mobile Substation Trailer",
+          lead_officer: "Executive Engineer (Transmission)"
+        },
+        {
+          id: "grid-2",
+          action: "Isolate marine feeder lines along the coastline",
+          deadline: "01:50",
+          urgency: "HIGH",
+          justification: "Prevent high-voltage arcing across inundated salt-water flood zones.",
+          resource_allocated: "Linesman Team 2",
+          lead_officer: "Substation Shift In-Charge"
+        }
+      ]
+    },
+    parametric_trigger: {
+      trigger_id: `CPT-${cleanCode}-${Date.now().toString(36).toUpperCase()}`,
+      location: {
+        name: locationName,
+        latitude: lat,
+        longitude: lon
+      },
+      hazard_type: "storm_surge_inundation",
+      simulated_surge_height_m: surgeHeight,
+      policy_threshold_m: 2.00,
+      breach: true,
+      confidence_level: "99.4%",
+      parametric_payout_usd: payout,
+      payout_beneficiary: beneficiary,
+      timestamp: new Date().toISOString(),
+      scenario_ref: scenarioName,
+      verification_hash: `0x${Math.random().toString(16).substring(2, 10)}${Math.random().toString(16).substring(2, 10)}${Math.random().toString(16).substring(2, 10)}`.toUpperCase()
+    }
+  };
+};
 
 // API: Health / System Status
 app.get('/api/status', (req, res) => {

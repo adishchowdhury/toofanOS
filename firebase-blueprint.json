@@ -1,0 +1,142 @@
+{
+  "entities": {
+    "CitizenReport": {
+      "title": "CitizenReport",
+      "description": "Crowdsourced ground truth alert from citizens in the cyclone surge corridor",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique report ID"
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "ISO timestamp of report submission"
+        },
+        "lat": {
+          "type": "number",
+          "description": "Latitude coordinate of observed hazard"
+        },
+        "lon": {
+          "type": "number",
+          "description": "Longitude coordinate of observed hazard"
+        },
+        "category": {
+          "type": "string",
+          "description": "Hazard type observed (surge, flood, wind, etc.)"
+        },
+        "waterDepthM": {
+          "type": "number",
+          "description": "Estimated flood/surge water depth in meters"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Eyewitness notes and landmark description"
+        },
+        "reporterName": {
+          "type": "string",
+          "description": "Name or handle of reporter"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Contact phone for rescue verification"
+        },
+        "status": {
+          "type": "string",
+          "description": "Dispatch lifecycle status",
+          "enum": ["PENDING_DISPATCH", "RESCUE_EN_ROUTE", "VERIFIED", "RESOLVED"]
+        }
+      },
+      "required": ["id", "timestamp", "lat", "lon", "category", "waterDepthM", "status"]
+    },
+    "OperationalDirective": {
+      "title": "OperationalDirective",
+      "description": "Official anticipatory action directive dispatched by the AI compiler to municipal, hospital, or grid personnel",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Directive dispatch ID"
+        },
+        "role": {
+          "type": "string",
+          "description": "Operational responder role"
+        },
+        "action": {
+          "type": "string",
+          "description": "Prescribed tactical action text"
+        },
+        "targetAsset": {
+          "type": "string",
+          "description": "Target infrastructure asset name"
+        },
+        "deadlineOffsetHours": {
+          "type": "number",
+          "description": "Lead time before landfall in hours"
+        },
+        "status": {
+          "type": "string",
+          "description": "Execution status",
+          "enum": ["PENDING", "DISPATCHED", "ACKNOWLEDGED", "COMPLETED"]
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Dispatch timestamp"
+        }
+      },
+      "required": ["id", "role", "action", "status", "timestamp"]
+    },
+    "ParametricPayoutCertificate": {
+      "title": "ParametricPayoutCertificate",
+      "description": "Cryptographic trigger certificate executing rapid disaster liquidity release",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Certificate ID"
+        },
+        "scenarioName": {
+          "type": "string",
+          "description": "Cyclone event designation"
+        },
+        "triggeredAt": {
+          "type": "string",
+          "description": "Verification timestamp"
+        },
+        "payoutAmountUsd": {
+          "type": "number",
+          "description": "Disbursed relief payout amount in USD"
+        },
+        "telemetryTrigger": {
+          "type": "string",
+          "description": "Specific meteorological sensor threshold breached"
+        },
+        "recipient": {
+          "type": "string",
+          "description": "Beneficiary municipal relief fund"
+        }
+      },
+      "required": ["id", "scenarioName", "triggeredAt", "payoutAmountUsd", "recipient"]
+    }
+  },
+  "firestore": {
+    "/citizen_reports/{reportId}": {
+      "schema": {
+        "$ref": "#/entities/CitizenReport"
+      },
+      "description": "Crowdsourced citizen hazard warnings and ground truth alerts"
+    },
+    "/operational_directives/{directiveId}": {
+      "schema": {
+        "$ref": "#/entities/OperationalDirective"
+      },
+      "description": "Dispatched emergency action orders for municipal, medical, and utility units"
+    },
+    "/parametric_certificates/{certificateId}": {
+      "schema": {
+        "$ref": "#/entities/ParametricPayoutCertificate"
+      },
+      "description": "Smart parametric insurance claim certificates"
+    }
+  }
+}

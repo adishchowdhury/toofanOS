@@ -1,0 +1,57 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 64;
+    }
+
+    // Citizen SOS Ground Truth Reports
+    match /citizen_reports/{reportId} {
+      allow read: if isValidId(reportId);
+      allow create: if isValidId(reportId)
+        && request.resource.data.keys().hasAll(['id', 'timestamp', 'lat', 'lon', 'category', 'waterDepthM', 'status'])
+        && request.resource.data.id is string
+        && request.resource.data.timestamp is string
+        && request.resource.data.lat is number
+        && request.resource.data.lon is number
+        && request.resource.data.category is string
+        && request.resource.data.waterDepthM is number
+        && request.resource.data.status is string;
+      allow update: if isValidId(reportId)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'notes']);
+      allow delete: if false;
+    }
+
+    // Operational Directives Dispatched to First Responders
+    match /operational_directives/{directiveId} {
+      allow read: if isValidId(directiveId);
+      allow create: if isValidId(directiveId)
+        && request.resource.data.keys().hasAll(['id', 'role', 'action', 'status', 'timestamp'])
+        && request.resource.data.id is string
+        && request.resource.data.role is string
+        && request.resource.data.action is string
+        && request.resource.data.status is string
+        && request.resource.data.timestamp is string;
+      allow update: if isValidId(directiveId)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'acknowledgedAt']);
+      allow delete: if false;
+    }
+
+    // Parametric Insurance Certificates
+    match /parametric_certificates/{certificateId} {
+      allow read: if isValidId(certificateId);
+      allow create: if isValidId(certificateId)
+        && request.resource.data.keys().hasAll(['id', 'scenarioName', 'triggeredAt', 'payoutAmountUsd', 'recipient'])
+        && request.resource.data.id is string
+        && request.resource.data.scenarioName is string
+        && request.resource.data.payoutAmountUsd is number;
+      allow update, delete: if false;
+    }
+
+    // Default deny for unmapped paths
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

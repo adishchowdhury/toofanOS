@@ -25,6 +25,11 @@ import { JudgeTourOverlay } from './components/JudgeTourOverlay';
 import { UpcomingCycloneModal } from './components/UpcomingCycloneModal';
 import { CitizenLifelineView } from './components/CitizenLifelineView';
 import { playRadarPing, playDispatchChime, playAlertWarning } from './utils/audio';
+import { 
+  verifyFirestoreConnection, 
+  saveOperationalDirectiveToFirestore, 
+  saveParametricCertificateToFirestore 
+} from './lib/firebase';
 
 export default function App() {
   const [allScenarios, setAllScenarios] = useState<CycloneScenario[]>(SCENARIOS);
@@ -78,6 +83,11 @@ export default function App() {
   const [isWalkthroughActive, setIsWalkthroughActive] = useState<boolean>(false);
   const [walkthroughStep, setWalkthroughStep] = useState<number>(0);
 
+  // Verify Firebase Firestore on boot
+  useEffect(() => {
+    verifyFirestoreConnection();
+  }, []);
+
   // Check backend server status on mount
   useEffect(() => {
     fetch('/api/status')
@@ -119,6 +129,34 @@ export default function App() {
       setTimeOffset(-6);
       setSelectedAsset(null);
       if (audioEnabled) playAlertWarning();
+
+      // Dynamically update parametric trigger reference for selected scenario
+      setCompiledDecisions(prev => {
+        const isMocha = found.id.includes('mocha');
+        const isDana = found.id.includes('dana');
+        const triggerId = isMocha ? `CPT-MOCHA-2023-${Date.now().toString(36).toUpperCase()}` : isDana ? `CPT-DANA-2026-EARLY-WARNING` : `CPT-AMPHAN-2020-01B`;
+        const locName = isMocha ? "Sittwe Marine Buoy Station 44002 / Bay of Bengal Station 20.15°N, 92.85°E" : isDana ? "Dhamra Port & Digha Coastal Tide Gauge Station 21.35°N, 87.45°E" : "Digha Coastal Gauge / Bay of Bengal Station 21.62°N, 87.50°E";
+        const surge = found.maxSurgeM || (isMocha ? 3.10 : isDana ? 2.65 : 2.85);
+        const payout = isMocha ? "$18,200,000" : isDana ? "$14,800,000" : "$12,500,000";
+
+        return {
+          ...prev,
+          parametric_trigger: {
+            ...prev.parametric_trigger,
+            trigger_id: triggerId,
+            scenario_ref: found.name,
+            location: {
+              name: locName,
+              latitude: found.centerLat || (isMocha ? 20.15 : isDana ? 21.35 : 21.62),
+              longitude: found.centerLon || (isMocha ? 92.85 : isDana ? 87.45 : 87.50)
+            },
+            simulated_surge_height_m: surge,
+            parametric_payout_usd: payout,
+            payout_beneficiary: isMocha ? "Rakhine Coastal Emergency Liquidity & Rehabilitation Escrow" : isDana ? "State Disaster Mitigation Fund (SDMF) & Coastal Ward Relief" : "Municipal Emergency Relief Fund & Coastal Infrastructure Repair Pool",
+            verification_hash: `0x${Math.random().toString(16).substring(2, 10)}${Math.random().toString(16).substring(2, 10)}${Math.random().toString(16).substring(2, 10)}`.toUpperCase()
+          }
+        };
+      });
     }
   };
 
@@ -230,6 +268,16 @@ export default function App() {
         return { ...prev, ambulances: { ...prev.ambulances, allocated: Math.min(prev.ambulances.total, prev.ambulances.allocated + 1) } };
       }
       return { ...prev, repairCrews: { ...prev.repairCrews, allocated: Math.min(prev.repairCrews.total, prev.repairCrews.allocated + 1) } };
+    });
+
+    // Save operational directive to Firebase Firestore
+    saveOperationalDirectiveToFirestore({
+      id: action.id,
+      role,
+      action: action.action,
+      targetAsset: 'District Emergency Operations Centre',
+      status: 'DISPATCHED',
+      timestamp: new Date().toISOString()
     });
 
     // Call Mock API
@@ -504,6 +552,7 @@ export default function App() {
           {activeTab === 'insurance' && (
             <ParametricInsuranceView
               triggerData={compiledDecisions.parametric_trigger}
+              currentScenario={currentScenario}
             />
           )}
 
