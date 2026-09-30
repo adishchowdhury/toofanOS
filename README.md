@@ -216,6 +216,22 @@ npm start
 
 ---
 
+## 🚀 Deploying to Vercel (1-Click Ready)
+
+ToofanOS is pre-configured for full-stack deployment on **Vercel** with zero extra setup:
+- **Frontend**: Automatically built into static files (`dist`) via Vite.
+- **Backend API**: Automatically routed as serverless functions via `api/index.ts` and `vercel.json`.
+
+### Steps to Deploy on Vercel:
+1. **Push your repository to GitHub / GitLab**.
+2. Go to [vercel.com/new](https://vercel.com/new) and **Import** the repository.
+3. In **Project Settings > Environment Variables**, add:
+   - `GEMINI_API_KEY`: Your Google GenAI API Key.
+   - `GOOGLE_MAPS_API_KEY`: Your Google Maps Platform API Key.
+4. Click **Deploy**. Vercel will automatically run `npm run build` and launch both the React frontend and Express serverless APIs (`/api/*`).
+
+---
+
 ## 🔒 Security & Privacy Architecture
 
 - **No Hardcoded API Keys**: All external API keys (Google Maps, Gemini AI) are maintained server-side in proxy endpoints; keys are never exposed in client git commits.
