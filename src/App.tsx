@@ -22,12 +22,15 @@ import { AuditTrailView } from './components/AuditTrailView';
 import { CinematicLanding } from './components/CinematicLanding';
 import { ModelDisclosureModal } from './components/ModelDisclosureModal';
 import { JudgeTourOverlay } from './components/JudgeTourOverlay';
+import { UpcomingCycloneModal } from './components/UpcomingCycloneModal';
 import { playRadarPing, playDispatchChime, playAlertWarning } from './utils/audio';
 
 export default function App() {
+  const [allScenarios, setAllScenarios] = useState<CycloneScenario[]>(SCENARIOS);
   const [currentScenario, setCurrentScenario] = useState<CycloneScenario>(SCENARIOS[0]);
   const [activeTab, setActiveTab] = useState<string>('landing');
   const [selectedAsset, setSelectedAsset] = useState<InfrastructureAsset | null>(null);
+  const [showUpcomingModal, setShowUpcomingModal] = useState<boolean>(false);
   
   // Timeline state (-6 to 0)
   const [timeOffset, setTimeOffset] = useState<number>(-6);
@@ -109,13 +112,30 @@ export default function App() {
 
   // Scenario Switcher
   const handleSelectScenario = (scenarioId: string) => {
-    const found = SCENARIOS.find(s => s.id === scenarioId);
+    const found = allScenarios.find(s => s.id === scenarioId) || SCENARIOS.find(s => s.id === scenarioId);
     if (found) {
       setCurrentScenario(found);
       setTimeOffset(-6);
       setSelectedAsset(null);
       if (audioEnabled) playAlertWarning();
     }
+  };
+
+  const handleApplyUpcomingScenario = (newScenario: CycloneScenario) => {
+    setAllScenarios(prev => {
+      const idx = prev.findIndex(s => s.id === newScenario.id);
+      if (idx >= 0) {
+        const copy = [...prev];
+        copy[idx] = newScenario;
+        return copy;
+      }
+      return [newScenario, ...prev];
+    });
+    setCurrentScenario(newScenario);
+    setTimeOffset(-6);
+    setSelectedAsset(null);
+    setActiveTab('command');
+    if (audioEnabled) playAlertWarning();
   };
 
   // Compile Decisions Action (Calls server-side API or deterministic fallback)
@@ -350,7 +370,7 @@ export default function App() {
       <CommandBar
         currentScenario={currentScenario}
         onSelectScenario={handleSelectScenario}
-        scenarios={SCENARIOS}
+        scenarios={allScenarios}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         onOpenCompiler={handleCompileDecisions}
@@ -361,6 +381,7 @@ export default function App() {
         setAudioEnabled={setAudioEnabled}
         onOpenModelDisclosure={() => setShowModelDisclosure(true)}
         onVoiceAction={handleVoiceAction}
+        onOpenUpcomingPredictor={() => setShowUpcomingModal(true)}
       />
 
       {/* Main Body Layout: SideNav + Dynamic Workspace */}
@@ -370,6 +391,7 @@ export default function App() {
           setActiveTab={setActiveTab}
           geminiReady={geminiReady}
           dispatchesCount={dispatchesCount}
+          onOpenUpcomingPredictor={() => setShowUpcomingModal(true)}
         />
 
         {/* Dynamic Center Work Area */}
@@ -507,6 +529,13 @@ export default function App() {
       <ModelDisclosureModal
         isOpen={showModelDisclosure}
         onClose={() => setShowModelDisclosure(false)}
+      />
+
+      {/* Anticipatory Upcoming Cyclone Predictor Modal */}
+      <UpcomingCycloneModal
+        isOpen={showUpcomingModal}
+        onClose={() => setShowUpcomingModal(false)}
+        onApplyScenario={handleApplyUpcomingScenario}
       />
     </div>
   );

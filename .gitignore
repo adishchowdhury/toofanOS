@@ -1,8 +1,24 @@
+# Dependencies & build artifacts
 node_modules/
 build/
 dist/
 coverage/
 .DS_Store
 *.log
-.env*
+
+# Sensitive environment variables and API keys (CRITICAL: prevents leak of Gemini, Gemma & Google Maps keys)
+.env
+.env.*
+*.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.key
+*.pem
+*credentials*.json
+*secret*
+
+# Allow example template only
 !.env.example
+

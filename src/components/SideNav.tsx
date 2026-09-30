@@ -19,13 +19,15 @@ interface SideNavProps {
   setActiveTab: (tab: string) => void;
   geminiReady: boolean;
   dispatchesCount: number;
+  onOpenUpcomingPredictor?: () => void;
 }
 
 export const SideNav: React.FC<SideNavProps> = ({
   activeTab,
   setActiveTab,
   geminiReady,
-  dispatchesCount
+  dispatchesCount,
+  onOpenUpcomingPredictor
 }) => {
   const navItems = [
     { id: 'command', label: 'Command', sub: 'OPERATIONAL OVERVIEW', icon: Compass },
@@ -41,6 +43,33 @@ export const SideNav: React.FC<SideNavProps> = ({
     <aside className="w-64 border-r border-[#12253A] bg-[#050B14] flex flex-col justify-between select-none shadow-2xl">
       {/* Navigation Links */}
       <div className="p-3 space-y-1">
+        {/* Early Warning AI Predictor CTA */}
+        {onOpenUpcomingPredictor && (
+          <div className="mb-3">
+            <button
+              onClick={onOpenUpcomingPredictor}
+              className="w-full flex items-center justify-between p-2.5 rounded-xl bg-gradient-to-r from-purple-950/60 to-indigo-950/60 hover:from-purple-900/80 hover:to-indigo-900/80 border border-purple-500/40 hover:border-purple-300 text-left transition-all shadow-md group cursor-pointer"
+            >
+              <div className="flex items-center gap-2.5">
+                <div className="w-7 h-7 rounded-lg bg-purple-500/20 border border-purple-400/40 flex items-center justify-center text-purple-300 group-hover:scale-110 transition-transform">
+                  <Compass className="w-4 h-4 text-purple-200" />
+                </div>
+                <div>
+                  <div className="text-[11px] font-mono font-bold text-white tracking-wide">
+                    Predict Upcoming
+                  </div>
+                  <div className="text-[9px] font-mono text-purple-300/80">
+                    AI Cyclogenesis Engine
+                  </div>
+                </div>
+              </div>
+              <span className="text-[8px] font-mono px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-200 border border-purple-400/30 font-bold uppercase">
+                NEW
+              </span>
+            </button>
+          </div>
+        )}
+
         <div className="px-3 py-2 text-[10px] font-mono tracking-widest text-[#6F8296] uppercase font-bold">
           OPERATIONAL MODULES
         </div>
@@ -114,12 +143,12 @@ export const SideNav: React.FC<SideNavProps> = ({
 
           <div className="flex items-center gap-1.5 p-1.5 rounded-xs bg-[#050B14] border border-[#C7A45D]/30 text-[#C7A45D]">
             <Cpu className="w-3 h-3 text-[#C7A45D]" />
-            <span>GEMINI 3.8</span>
+            <span>GEMMA 4</span>
           </div>
         </div>
 
         <div className="px-1 text-[9px] text-[#4A5D70] font-mono leading-tight">
-          Google Earth 3D · Windy.com ECMWF · Gemini 3.8 Flash
+          Gemma 4 (26B) · Gemini 3.7 Flash · Keys in .gitignore
         </div>
       </div>
     </aside>

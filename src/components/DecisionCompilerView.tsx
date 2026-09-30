@@ -50,7 +50,7 @@ export const DecisionCompilerView: React.FC<DecisionCompilerViewProps> = ({
     { label: 'SIMULATING SURGE (BATHTUB COASTAL FILL)', icon: ShieldAlert },
     { label: 'MAPPING INFRASTRUCTURE (OSM GRAPH)', icon: Building2 },
     { label: 'CALCULATING EXPOSURE × CRITICALITY', icon: AlertTriangle },
-    { label: 'COMPILING ROLE DIRECTIVES (GEMINI 3.8 FLASH)', icon: Sparkles }
+    { label: 'COMPILING ROLE DIRECTIVES (GEMMA 4 / GEMINI 3.7)', icon: Sparkles }
   ];
 
   return (
@@ -58,15 +58,15 @@ export const DecisionCompilerView: React.FC<DecisionCompilerViewProps> = ({
       {/* Editorial Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-[#12253A] pb-5 gap-4">
         <div>
-          <div className="flex items-center gap-2 mb-1.5">
+          <div className="flex items-center gap-2 mb-1.5 flex-wrap">
             <span className="text-[10px] font-mono tracking-widest text-[#C7A45D] uppercase font-bold px-2 py-0.5 border border-[#C7A45D]/40 rounded-xs bg-[#C7A45D]/10">
               REASONING DECISION ENGINE
             </span>
-            <span className="text-[11px] font-mono text-[#6F8296]">
-              COMPILER: {compilerMode.toUpperCase()}
+            <span className="text-[10px] font-mono text-[#63C69A] px-2 py-0.5 border border-[#63C69A]/30 rounded-xs bg-[#63C69A]/10 font-bold">
+              GEMMA 4 / GEMINI 3.7
             </span>
-            <span className="text-xs text-[#E2C98A] font-script">
-              "before impact, the decisions exist"
+            <span className="text-[10px] font-mono text-[#65D9E8] px-2 py-0.5 border border-[#65D9E8]/30 rounded-xs bg-[#65D9E8]/10">
+              KEYS PROTECTED (.gitignore)
             </span>
           </div>
 

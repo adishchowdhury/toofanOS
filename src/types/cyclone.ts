@@ -51,6 +51,11 @@ export interface CycloneScenario {
   centerLat: number;
   centerLon: number;
   baseZoom: number;
+  isUpcoming?: boolean;
+  forecastModel?: string;
+  confidencePct?: number;
+  leadTimeHours?: number;
+  sstAnomalyC?: number;
 }
 
 export interface ResourceLedger {

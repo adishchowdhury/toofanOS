@@ -40,8 +40,10 @@ export const GeminiIntelligenceModal: React.FC<GeminiIntelligenceModalProps> = (
   const [analysisData, setAnalysisData] = useState<any>(null);
   const [copiedHash, setCopiedHash] = useState(false);
   const [hash, setHash] = useState('0x4F92B801E834D976A032CBFE99187D320B');
+  const [selectedModel, setSelectedModel] = useState<'gemma-4-26b-a4b-it' | 'gemini-3.7-flash' | 'gemini-3.8-flash'>('gemma-4-26b-a4b-it');
+  const [modelUsed, setModelUsed] = useState<string>('gemma-4-26b-a4b-it');
 
-  const runGeminiAnalysis = async () => {
+  const runGeminiAnalysis = async (modelToUse = selectedModel) => {
     setLoading(true);
     try {
       const res = await fetch('/api/gemini-cyclone-analysis', {
@@ -51,6 +53,7 @@ export const GeminiIntelligenceModal: React.FC<GeminiIntelligenceModalProps> = (
           scenario: scenario.name,
           assets,
           timeOffset,
+          model: modelToUse,
           windyData: {
             windSpeedKmh: 185,
             windGustKmh: 220,
@@ -66,6 +69,9 @@ export const GeminiIntelligenceModal: React.FC<GeminiIntelligenceModalProps> = (
       });
       const result = await res.json();
       setAnalysisData(result.data);
+      if (result.model_used) {
+        setModelUsed(result.model_used);
+      }
       setHash(`0x${Math.random().toString(16).substring(2, 10)}${Math.random().toString(16).substring(2, 10)}`.toUpperCase());
     } catch (e) {
       console.warn('Analysis fetch error:', e);
@@ -76,7 +82,7 @@ export const GeminiIntelligenceModal: React.FC<GeminiIntelligenceModalProps> = (
 
   useEffect(() => {
     if (isOpen && !analysisData) {
-      runGeminiAnalysis();
+      runGeminiAnalysis(selectedModel);
     }
   }, [isOpen]);
 
@@ -92,8 +98,16 @@ export const GeminiIntelligenceModal: React.FC<GeminiIntelligenceModalProps> = (
               <Sparkles className="w-4 h-4 animate-spin" style={{ animationDuration: '6s' }} />
             </div>
             <div>
-              <div className="text-[10px] text-[#C7A45D] uppercase tracking-wider font-bold">
-                GEMINI 3.8 FLASH API · MULTI-SURFACE SYNTHESIS
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] text-[#C7A45D] uppercase tracking-wider font-bold">
+                  AI HAZARD SYNTHESIS
+                </span>
+                <span className="text-[9px] px-1.5 py-0.5 rounded bg-[#63C69A]/20 text-[#63C69A] border border-[#63C69A]/40 font-bold">
+                  ACTIVE: {modelUsed}
+                </span>
+                <span className="text-[9px] px-1.5 py-0.5 rounded bg-[#65D9E8]/20 text-[#65D9E8] border border-[#65D9E8]/30">
+                  KEYS PROTECTED (.gitignore)
+                </span>
               </div>
               <h2 className="text-base font-serif text-[#F1EBDD] font-bold">
                 Anticipatory Hazard Intelligence Briefing
@@ -102,11 +116,45 @@ export const GeminiIntelligenceModal: React.FC<GeminiIntelligenceModalProps> = (
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Model Switcher */}
+            <div className="flex items-center bg-[#050B14] border border-[#203A55] rounded p-0.5 text-[10px]">
+              <button
+                onClick={() => {
+                  setSelectedModel('gemma-4-26b-a4b-it');
+                  runGeminiAnalysis('gemma-4-26b-a4b-it');
+                }}
+                className={`px-2 py-0.5 rounded transition-colors ${selectedModel === 'gemma-4-26b-a4b-it' ? 'bg-[#C7A45D] text-[#050B14] font-bold' : 'text-[#9BB0C1] hover:text-[#F1EBDD]'}`}
+                title="Gemma 4 26B A4B IT"
+              >
+                Gemma 4
+              </button>
+              <button
+                onClick={() => {
+                  setSelectedModel('gemini-3.7-flash');
+                  runGeminiAnalysis('gemini-3.7-flash');
+                }}
+                className={`px-2 py-0.5 rounded transition-colors ${selectedModel === 'gemini-3.7-flash' ? 'bg-[#C7A45D] text-[#050B14] font-bold' : 'text-[#9BB0C1] hover:text-[#F1EBDD]'}`}
+                title="Gemini 3.7 Flash"
+              >
+                Gemini 3.7
+              </button>
+              <button
+                onClick={() => {
+                  setSelectedModel('gemini-3.8-flash');
+                  runGeminiAnalysis('gemini-3.8-flash');
+                }}
+                className={`px-2 py-0.5 rounded transition-colors ${selectedModel === 'gemini-3.8-flash' ? 'bg-[#C7A45D] text-[#050B14] font-bold' : 'text-[#9BB0C1] hover:text-[#F1EBDD]'}`}
+                title="Gemini 3.8 Flash"
+              >
+                3.8 Flash
+              </button>
+            </div>
+
             <button
-              onClick={runGeminiAnalysis}
+              onClick={() => runGeminiAnalysis(selectedModel)}
               disabled={loading}
               className="flex items-center gap-1.5 px-3 py-1 bg-[#0D1C2D] hover:bg-[#12253A] border border-[#203A55] text-xs text-[#65D9E8] rounded transition-colors"
-              title="Rerun Gemini analysis"
+              title="Rerun AI analysis"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-[#C7A45D]' : ''}`} />
               <span>RE-SYNTHESIZE</span>

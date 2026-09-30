@@ -59,13 +59,16 @@ export const CinematicLanding: React.FC<CinematicLandingProps> = ({
       {/* Top Intelligence Dossier Header */}
       <header className="px-6 lg:px-12 py-6 border-b border-[#12253A]/80 flex items-center justify-between z-10 bg-[#050B14]/80 backdrop-blur-md">
         <div className="flex items-center gap-3.5">
-          <div className="relative w-9 h-9 rounded-full border border-[#C7A45D]/70 flex items-center justify-center bg-[#091525] shadow-[0_0_20px_rgba(199,164,93,0.25)]">
-            <div className="w-6 h-6 rounded-full border border-dashed border-[#65D9E8]/80 animate-[spin_12s_linear_infinite]" />
-            <div className="w-2.5 h-2.5 rounded-full bg-[#E2C98A] shadow-[0_0_10px_#E2C98A]" />
+          <div className="relative w-10 h-10 rounded-xl border border-amber-400/50 flex items-center justify-center bg-[#091525] shadow-[0_0_20px_rgba(245,158,11,0.3)] overflow-hidden p-1">
+            <img 
+              src="/toofan-logo.png" 
+              alt="ToofanOS Thunderbolt Logo" 
+              className="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(245,158,11,0.6)]" 
+            />
           </div>
           <div>
             <span className="font-cinzel text-base font-bold tracking-[0.26em] text-[#F1EBDD]">
-              CYCLONEOS
+              TOOFANOS
             </span>
             <span className="text-[10px] font-mono tracking-widest text-[#6F8296] block uppercase">
               Anticipatory Action Compiler
@@ -114,7 +117,7 @@ export const CinematicLanding: React.FC<CinematicLandingProps> = ({
           </div>
 
           <p className="text-base text-[#9BB0C1] font-mono leading-relaxed max-w-xl">
-            CycloneOS converts geospatial hazard intelligence into prioritized, time-bound decisions for the people responsible for protecting communities and infrastructure.
+            ToofanOS converts geospatial hazard intelligence into prioritized, time-bound decisions for the people responsible for protecting communities and infrastructure.
           </p>
 
           {/* Primary Action Buttons */}

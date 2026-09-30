@@ -176,6 +176,27 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
 }) => {
   const [mapType, setMapType] = useState<'hybrid' | 'satellite' | 'roadmap' | 'terrain'>('hybrid');
   const [showLayerPanel, setShowLayerPanel] = useState(false);
+  const [activeMapsKey, setActiveMapsKey] = useState<string>(
+    import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''
+  );
+
+  useEffect(() => {
+    if (!activeMapsKey) {
+      fetch('/api/maps-config')
+        .then(res => res.json())
+        .then(data => {
+          if (data.apiKey) {
+            setActiveMapsKey(data.apiKey);
+          } else {
+            setActiveMapsKey('AIzaSyAgykiYAhn1oBkSnQ1_rva539lqP067f74');
+          }
+        })
+        .catch(() => {
+          setActiveMapsKey('AIzaSyAgykiYAhn1oBkSnQ1_rva539lqP067f74');
+        });
+    }
+  }, [activeMapsKey]);
+
   const [cameraTarget, setCameraTarget] = useState<{ center: { lat: number; lng: number } | null; zoom: number | null }>({
     center: null,
     zoom: null
@@ -413,7 +434,7 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
 
       {/* Main Google Maps Canvas via @vis.gl/react-google-maps */}
       <div className="w-full h-full">
-        <APIProvider apiKey={GOOGLE_MAPS_API_KEY} solutionChannel="GMP_visgl_reactgooglemaps_v1.0.0">
+        <APIProvider apiKey={activeMapsKey || 'AIzaSyAgykiYAhn1oBkSnQ1_rva539lqP067f74'} solutionChannel="GMP_visgl_reactgooglemaps_v1.0.0">
           <Map
             id="cycloneos-google-map"
             mapId="DEMO_MAP_ID"

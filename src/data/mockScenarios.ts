@@ -116,6 +116,132 @@ export const SCENARIOS: CycloneScenario[] = [
         stage: 'Landfall with catastrophic storm tide'
       }
     ]
+  },
+  {
+    id: 'upcoming-dana-2026',
+    name: 'Upcoming Cyclone Dana (AI Forecast)',
+    codeName: 'DANA · BOB-03 · EARLY WARNING',
+    year: 2026,
+    region: 'Bay of Bengal · Odisha & Bengal Coastal Border',
+    category: 'Category 3 Very Severe Cyclonic Storm (Rapid Intensification)',
+    peakWindKmh: 195,
+    minPressureHpa: 968,
+    maxSurgeM: 2.65,
+    targetLandfallDate: 'Upcoming Forecast · Projected Landfall T+48h',
+    summary: 'Active Cyclonic Disturbance tracked in Central Bay of Bengal. Gemma 4 / Gemini predictive hydrodynamics indicate rapid intensification fueled by +2.2°C SST anomaly, with storm surge forcing over the Digha and Dhamra coastal barriers.',
+    centerLat: 21.32,
+    centerLon: 87.42,
+    baseZoom: 11,
+    isUpcoming: true,
+    forecastModel: 'Gemma 4 Cyclogenesis + ECMWF ENS (94.2% track confidence)',
+    confidencePct: 94.2,
+    leadTimeHours: 48,
+    sstAnomalyC: 2.2,
+    trackPoints: [
+      {
+        timeOffsetHours: -6,
+        label: 'T−06:00 (Anticipatory Window)',
+        lat: 20.50,
+        lon: 87.05,
+        windSpeedKmh: 165,
+        centralPressureHpa: 980,
+        surgeHeightM: 1.25,
+        stage: 'Rapid Intensification Over Warm Eddy'
+      },
+      {
+        timeOffsetHours: -4,
+        label: 'T−04:00 (Coastal Alarm)',
+        lat: 20.80,
+        lon: 87.18,
+        windSpeedKmh: 180,
+        centralPressureHpa: 974,
+        surgeHeightM: 1.85,
+        stage: 'Outer Rainbands Striking Digha & Dhamra'
+      },
+      {
+        timeOffsetHours: -2,
+        label: 'T−02:00 (Substation Cutoff)',
+        lat: 21.10,
+        lon: 87.32,
+        windSpeedKmh: 190,
+        centralPressureHpa: 970,
+        surgeHeightM: 2.30,
+        stage: 'Estuarine Surge Backflow & Road Severance'
+      },
+      {
+        timeOffsetHours: 0,
+        label: 'T−00:00 (Projected Landfall)',
+        lat: 21.35,
+        lon: 87.45,
+        windSpeedKmh: 195,
+        centralPressureHpa: 968,
+        surgeHeightM: 2.65,
+        stage: 'Eye Landfall South of Digha / Bhadrak Coast'
+      }
+    ]
+  },
+  {
+    id: 'upcoming-varun-2027',
+    name: 'Upcoming Cyclone Varun (Arabian Sea Warning)',
+    codeName: 'VARUN · ARB-02 · 72H OUTLOOK',
+    year: 2027,
+    region: 'North Arabian Sea · Gujarat & Saurashtra Coast',
+    category: 'Category 4 Extremely Severe Cyclone (Anticipatory Outlook)',
+    peakWindKmh: 220,
+    minPressureHpa: 950,
+    maxSurgeM: 3.40,
+    targetLandfallDate: 'Projected Genesis · Landfall T+72h',
+    summary: 'Anticipatory deep depression model in North Arabian Sea. AI physics synthesis warns of catastrophic storm surge across low-lying port facilities in Kandla and Jamnagar refineries with high tide confluence.',
+    centerLat: 22.45,
+    centerLon: 69.85,
+    baseZoom: 10,
+    isUpcoming: true,
+    forecastModel: 'Gemma 4 Deep Ocean Model + IMD Bathtub Ensemble',
+    confidencePct: 91.8,
+    leadTimeHours: 72,
+    sstAnomalyC: 2.8,
+    trackPoints: [
+      {
+        timeOffsetHours: -6,
+        label: 'T−06:00',
+        lat: 21.60,
+        lon: 69.10,
+        windSpeedKmh: 185,
+        centralPressureHpa: 965,
+        surgeHeightM: 1.60,
+        stage: 'Approaching Gulf of Kutch Funnel'
+      },
+      {
+        timeOffsetHours: -4,
+        label: 'T−04:00',
+        lat: 21.95,
+        lon: 69.40,
+        windSpeedKmh: 200,
+        centralPressureHpa: 958,
+        surgeHeightM: 2.40,
+        stage: 'Port Crane & Pipeline Preemptive Lockdown'
+      },
+      {
+        timeOffsetHours: -2,
+        label: 'T−02:00',
+        lat: 22.25,
+        lon: 69.65,
+        windSpeedKmh: 215,
+        centralPressureHpa: 952,
+        surgeHeightM: 3.00,
+        stage: 'Surge Penetration into Salt Flats'
+      },
+      {
+        timeOffsetHours: 0,
+        label: 'T−00:00 (Projected Landfall)',
+        lat: 22.48,
+        lon: 69.90,
+        windSpeedKmh: 220,
+        centralPressureHpa: 950,
+        surgeHeightM: 3.40,
+        stage: 'Coastal Impact at Saurashtra Basin'
+      }
+    ]
   }
 ];
 

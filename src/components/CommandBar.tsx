@@ -3,18 +3,20 @@ import {
   Play, 
   Clock, 
   Wind, 
-  Sparkles,
-  Volume2,
-  VolumeX,
-  HelpCircle,
-  Mic,
-  MicOff,
-  Send,
-  Radio,
-  CheckCircle2,
-  AlertCircle
+  Sparkles, 
+  Volume2, 
+  VolumeX, 
+  HelpCircle, 
+  Mic, 
+  MicOff, 
+  Send, 
+  Radio, 
+  CheckCircle2, 
+  AlertCircle,
+  Compass
 } from 'lucide-react';
 import { CycloneScenario } from '../types/cyclone';
+import { VoiceCommandModal } from './VoiceCommandModal';
 
 interface CommandBarProps {
   currentScenario: CycloneScenario;
@@ -30,6 +32,7 @@ interface CommandBarProps {
   setAudioEnabled: (val: boolean) => void;
   onOpenModelDisclosure: () => void;
   onVoiceAction?: (action: 'compile' | 'dispatch' | 'tab' | 'scenario', payload?: string) => void;
+  onOpenUpcomingPredictor: () => void;
 }
 
 export const CommandBar: React.FC<CommandBarProps> = ({
@@ -45,7 +48,8 @@ export const CommandBar: React.FC<CommandBarProps> = ({
   audioEnabled,
   setAudioEnabled,
   onOpenModelDisclosure,
-  onVoiceAction
+  onVoiceAction,
+  onOpenUpcomingPredictor
 }) => {
   const timeFormatted = timeOffset === 0 ? 'T−00:00 (LANDFALL)' : `T−0${Math.abs(timeOffset)}:00`;
 
@@ -53,6 +57,7 @@ export const CommandBar: React.FC<CommandBarProps> = ({
   const [isListening, setIsListening] = useState(false);
   const [voiceTranscript, setVoiceTranscript] = useState('');
   const [voiceFeedback, setVoiceFeedback] = useState<string | null>(null);
+  const [showVoiceModal, setShowVoiceModal] = useState(false);
   const recognitionRef = useRef<any>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -270,18 +275,21 @@ export const CommandBar: React.FC<CommandBarProps> = ({
           onClick={() => setActiveTab('landing')}
           className="flex items-center gap-3.5 group text-left transition-transform hover:scale-[0.99]"
         >
-          {/* Concentric Storm Eye Symbol */}
-          <div className="relative w-8 h-8 rounded-full border border-[#C7A45D]/60 flex items-center justify-center bg-[#091525] shadow-[0_0_18px_rgba(199,164,93,0.22)] group-hover:border-[#E2C98A]">
-            <div className="w-5 h-5 rounded-full border border-dashed border-[#65D9E8]/80 animate-[spin_10s_linear_infinite]" />
-            <div className="absolute w-2 h-2 rounded-full bg-[#E2C98A] shadow-[0_0_8px_#E2C98A]" />
+          {/* Thunderbolt Logo */}
+          <div className="relative w-9 h-9 rounded-xl border border-amber-400/50 flex items-center justify-center bg-[#091525] shadow-[0_0_16px_rgba(245,158,11,0.25)] group-hover:border-amber-300 group-hover:shadow-[0_0_22px_rgba(245,158,11,0.45)] transition-all overflow-hidden p-1">
+            <img 
+              src="/toofan-logo.png" 
+              alt="ToofanOS Thunderbolt Logo" 
+              className="w-full h-full object-contain filter drop-shadow-[0_0_6px_rgba(245,158,11,0.6)]" 
+            />
           </div>
 
           <div>
             <div className="flex items-center gap-2">
               <span className="font-semibold tracking-[0.24em] text-sm text-[#F1EBDD] font-cinzel">
-                CYCLONEOS
+                TOOFANOS
               </span>
-              <span className="text-[9px] tracking-widest text-[#C7A45D] font-mono font-medium px-1.5 py-0.2 border border-[#C7A45D]/40 rounded-xs bg-[#C7A45D]/10">
+              <span className="text-[9px] tracking-widest text-[#E2C98A] font-mono font-medium px-1.5 py-0.2 border border-amber-400/40 rounded-xs bg-amber-400/10">
                 PRO INTEL
               </span>
             </div>
@@ -298,20 +306,48 @@ export const CommandBar: React.FC<CommandBarProps> = ({
           <span className="text-[#6F8296] font-mono uppercase text-[10px] tracking-wider">EVENT:</span>
           <select 
             value={currentScenario.id}
-            onChange={(e) => onSelectScenario(e.target.value)}
+            onChange={(e) => {
+              if (e.target.value === '__PREDICT_NEW__') {
+                onOpenUpcomingPredictor();
+              } else {
+                onSelectScenario(e.target.value);
+              }
+            }}
             className="bg-transparent text-[#F1EBDD] font-mono font-medium focus:outline-none cursor-pointer pr-2"
           >
-            {scenarios.map((sc) => (
-              <option key={sc.id} value={sc.id} className="bg-[#091525] text-[#F1EBDD]">
-                {sc.name} ({sc.year})
-              </option>
-            ))}
+            <optgroup label="🔮 UPCOMING & ACTIVE WARNINGS">
+              {scenarios.filter(s => s.isUpcoming).map((sc) => (
+                <option key={sc.id} value={sc.id} className="bg-[#091525] text-purple-300 font-semibold">
+                  {sc.name} ({sc.year})
+                </option>
+              ))}
+            </optgroup>
+            <optgroup label="📜 HISTORICAL REPLAYS">
+              {scenarios.filter(s => !s.isUpcoming).map((sc) => (
+                <option key={sc.id} value={sc.id} className="bg-[#091525] text-[#F1EBDD]">
+                  {sc.name} ({sc.year})
+                </option>
+              ))}
+            </optgroup>
+            <option value="__PREDICT_NEW__" className="bg-[#1C1635] text-amber-300 font-bold">
+              ✨ + Predict New Upcoming Cyclone...
+            </option>
           </select>
           <span className="text-[#E7A84A] font-mono text-[11px] font-medium border-l border-[#12253A] pl-2 flex items-center gap-1">
             <Wind className="w-3 h-3 text-[#E7A84A]" />
             {currentScenario.peakWindKmh} km/h
           </span>
         </div>
+
+        {/* Predict Upcoming Cyclone Quick Trigger */}
+        <button
+          onClick={onOpenUpcomingPredictor}
+          className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-sm bg-purple-900/40 hover:bg-purple-900/60 border border-purple-500/50 hover:border-purple-400 text-purple-200 text-xs font-mono font-semibold transition-all shadow-sm group cursor-pointer"
+          title="Predict & detail future cyclones with Gemma 4 / Gemini AI physics"
+        >
+          <Compass className="w-3.5 h-3.5 text-purple-300 group-hover:rotate-45 transition-transform" />
+          <span>PREDICT UPCOMING</span>
+        </button>
       </div>
 
       {/* Center: Urgency / Time to Impact Indicator */}
@@ -337,33 +373,15 @@ export const CommandBar: React.FC<CommandBarProps> = ({
 
       {/* Right: Cloud Speech-to-Text Mic + Quick CTAs */}
       <div className="flex items-center gap-2.5">
-        {/* Cloud Speech-to-Text Voice Mic Button */}
+        {/* Speech Directives Voice Console Button */}
         <div className="relative">
           <button
-            onClick={toggleVoiceListening}
-            className={`flex items-center gap-2 px-2.5 py-1.5 rounded-sm border text-xs font-mono tracking-wider font-semibold transition-all ${
-              isListening
-                ? 'bg-[#D95757]/20 border-[#D95757] text-[#D95757] shadow-[0_0_15px_rgba(217,87,87,0.4)]'
-                : 'bg-[#091525] border-[#65D9E8]/40 hover:border-[#65D9E8] text-[#65D9E8]'
-            }`}
-            title="Google Cloud Speech-to-Text: Speak 'Compile' or 'Dispatch'"
+            onClick={() => setShowVoiceModal(true)}
+            className="flex items-center gap-2 px-2.5 py-1.5 rounded-sm border text-xs font-mono tracking-wider font-semibold transition-all bg-[#091525] border-purple-400/50 hover:border-purple-300 text-purple-200 shadow-sm hover:bg-purple-950/30 cursor-pointer"
+            title="Open Speech Directives Console: Speak or tap commands"
           >
-            {isListening ? (
-              <>
-                <div className="flex items-center gap-0.5 h-3">
-                  <span className="w-0.5 bg-[#D95757] animate-voice-bar-1" />
-                  <span className="w-0.5 bg-[#D95757] animate-voice-bar-2" />
-                  <span className="w-0.5 bg-[#D95757] animate-voice-bar-3" />
-                  <span className="w-0.5 bg-[#D95757] animate-voice-bar-4" />
-                </div>
-                <span className="text-[10px]">RECORDING VOICE...</span>
-              </>
-            ) : (
-              <>
-                <Mic className="w-3.5 h-3.5 text-[#65D9E8]" />
-                <span className="hidden sm:inline text-[11px]">VOICE: "COMPILE" / "DISPATCH"</span>
-              </>
-            )}
+            <Mic className="w-3.5 h-3.5 text-purple-300 animate-pulse" />
+            <span className="hidden sm:inline text-[11px]">VOICE DIRECTIVES</span>
           </button>
         </div>
 
@@ -404,6 +422,20 @@ export const CommandBar: React.FC<CommandBarProps> = ({
           <HelpCircle className="w-4 h-4" />
         </button>
       </div>
+
+      {/* Voice Command & Directives Console Modal */}
+      <VoiceCommandModal
+        isOpen={showVoiceModal}
+        onClose={() => setShowVoiceModal(false)}
+        onOpenUpcomingPredictor={onOpenUpcomingPredictor}
+        onExecuteCommand={(cmd) => {
+          if (cmd === 'COMPILE') onOpenCompiler();
+          else if (cmd === 'DISPATCH') onDispatchAll();
+          else if (cmd === 'EARTH' || cmd === 'WINDY' || cmd === 'MAP') setActiveTab('command');
+          else if (cmd === 'PARAMETRIC') setActiveTab('insurance');
+          else if (cmd === 'PREDICT') onOpenUpcomingPredictor();
+        }}
+      />
     </header>
   );
 };

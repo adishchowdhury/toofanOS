@@ -20,7 +20,7 @@ export const JudgeTourOverlay: React.FC<JudgeTourOverlayProps> = ({
     {
       title: '01 · Real Historical Scenario Ingestion',
       subtitle: 'Super Cyclone Amphan (Bay of Bengal)',
-      body: 'CycloneOS ingests SRTM 30m Digital Elevation Models via GEE, IMD historical track cones, and OpenStreetMap coastal infrastructure graphs.'
+      body: 'ToofanOS ingests SRTM 30m Digital Elevation Models via GEE, IMD historical track cones, and OpenStreetMap coastal infrastructure graphs.'
     },
     {
       title: '02 · Physical Simulation: Surge Inundation & Runoff',
