@@ -25,7 +25,8 @@ import {
   Eye,
   Compass,
   Activity,
-  Crosshair
+  Crosshair,
+  Wind
 } from 'lucide-react';
 
 interface GoogleMapViewProps {
@@ -346,24 +347,14 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
             <Layers className="w-4 h-4" />
           </button>
 
-          {/* Cross Engine Jump: Google Earth 3D */}
-          {onSwitchToGoogleEarth && (
-            <button
-              onClick={onSwitchToGoogleEarth}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#091525]/90 hover:bg-[#0D1C2D] border border-[#65D9E8]/40 hover:border-[#65D9E8] text-[#65D9E8] rounded text-[10px] font-mono font-bold tracking-wider transition-colors shadow-lg"
-              title="Switch to Google Earth 3D Orbital & Elevation Model"
-            >
-              <span>GOOGLE EARTH™ 3D</span>
-            </button>
-          )}
-
-          {/* Cross Engine Jump: Windy.com */}
+          {/* Windy.com Streamlines Toggle */}
           {onSwitchToWindy && (
             <button
               onClick={onSwitchToWindy}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#091525]/90 hover:bg-[#0D1C2D] border border-[#E7A84A]/40 hover:border-[#E7A84A] text-[#E7A84A] rounded text-[10px] font-mono font-bold tracking-wider transition-colors shadow-lg"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#091525]/90 hover:bg-[#0D1C2D] border border-[#E7A84A]/40 hover:border-[#E7A84A] text-[#E7A84A] rounded text-[10px] font-mono font-bold tracking-wider transition-colors shadow-lg cursor-pointer"
               title="Switch to Windy.com Live Particle Streamlines"
             >
+              <Wind className="w-3.5 h-3.5 text-[#E7A84A]" />
               <span>WINDY.COM™</span>
             </button>
           )}
@@ -372,22 +363,10 @@ export const GoogleMapView: React.FC<GoogleMapViewProps> = ({
           {onOpenGeminiBriefing && (
             <button
               onClick={onOpenGeminiBriefing}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#C7A45D] hover:bg-[#E2C98A] text-[#050B14] rounded text-[10px] font-mono font-bold tracking-wider transition-colors shadow-lg animate-pulse"
-              title="Synthesize Satellite with Gemini 3.8 Flash"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#C7A45D] hover:bg-[#E2C98A] text-[#050B14] rounded text-[10px] font-mono font-bold tracking-wider transition-colors shadow-lg cursor-pointer"
+              title="Synthesize Satellite with Gemini AI"
             >
-              <span>GEMINI AI SYNTHESIS</span>
-            </button>
-          )}
-
-          {/* Switch to Tactical SVG Chart */}
-          {onSwitchToTactical && (
-            <button
-              onClick={onSwitchToTactical}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#091525]/90 hover:bg-[#0D1C2D] border border-[#D8CEB9]/40 hover:border-[#D8CEB9] text-[#D8CEB9] rounded text-[10px] font-mono font-bold tracking-wider transition-colors shadow-lg"
-              title="Switch to Tactical Cartographic Chart"
-            >
-              <Compass className="w-3.5 h-3.5" />
-              <span>TACTICAL</span>
+              <span>AI SYNTHESIS</span>
             </button>
           )}
         </div>

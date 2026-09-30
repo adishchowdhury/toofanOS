@@ -23,7 +23,7 @@ interface WindyMapViewProps {
   onSelectAsset: (asset: InfrastructureAsset | null) => void;
   timeOffset: number;
   onSwitchToGoogleMaps: () => void;
-  onSwitchToGoogleEarth: () => void;
+  onSwitchToGoogleEarth?: () => void;
   onOpenGeminiBriefing: () => void;
 }
 
@@ -157,20 +157,10 @@ export const WindyMapView: React.FC<WindyMapViewProps> = ({
             </button>
           </div>
 
-          {/* Cross Engine Jump: Google Earth */}
-          <button
-            onClick={onSwitchToGoogleEarth}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-[#091525]/90 hover:bg-[#0D1C2D] border border-[#65D9E8]/40 hover:border-[#65D9E8] text-[#65D9E8] rounded text-[10px] font-mono font-bold tracking-wider transition-colors shadow-lg"
-            title="Switch to Google Earth 3D Orbital & Digital Elevation Model"
-          >
-            <Globe className="w-3.5 h-3.5" />
-            <span>GOOGLE EARTH™ 3D</span>
-          </button>
-
           {/* Cross Engine Jump: Google Maps */}
           <button
             onClick={onSwitchToGoogleMaps}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-[#091525]/90 hover:bg-[#0D1C2D] border border-[#C7A45D]/40 hover:border-[#C7A45D] text-[#C7A45D] rounded text-[10px] font-mono font-bold tracking-wider transition-colors shadow-lg"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-[#091525]/90 hover:bg-[#0D1C2D] border border-[#C7A45D]/40 hover:border-[#C7A45D] text-[#C7A45D] rounded text-[10px] font-mono font-bold tracking-wider transition-colors shadow-lg cursor-pointer"
             title="Switch to Google Maps Satellite with Advanced Markers"
           >
             <Compass className="w-3.5 h-3.5" />

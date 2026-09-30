@@ -59,11 +59,11 @@ export const CinematicLanding: React.FC<CinematicLandingProps> = ({
       {/* Top Intelligence Dossier Header */}
       <header className="px-6 lg:px-12 py-6 border-b border-[#12253A]/80 flex items-center justify-between z-10 bg-[#050B14]/80 backdrop-blur-md">
         <div className="flex items-center gap-3.5">
-          <div className="relative w-10 h-10 rounded-xl border border-amber-400/50 flex items-center justify-center bg-[#091525] shadow-[0_0_20px_rgba(245,158,11,0.3)] overflow-hidden p-1">
+          <div className="relative flex items-center justify-center">
             <img 
               src="/toofan-logo.png" 
-              alt="ToofanOS Thunderbolt Logo" 
-              className="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(245,158,11,0.6)]" 
+              alt="ToofanOS" 
+              className="w-11 h-11 object-contain drop-shadow-[0_0_14px_rgba(245,158,11,0.5)]" 
             />
           </div>
           <div>

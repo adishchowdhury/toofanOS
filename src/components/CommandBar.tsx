@@ -273,14 +273,14 @@ export const CommandBar: React.FC<CommandBarProps> = ({
       <div className="flex items-center gap-4">
         <button 
           onClick={() => setActiveTab('landing')}
-          className="flex items-center gap-3.5 group text-left transition-transform hover:scale-[0.99]"
+          className="flex items-center gap-3 group text-left transition-transform hover:scale-[1.01]"
         >
-          {/* Thunderbolt Logo */}
-          <div className="relative w-9 h-9 rounded-xl border border-amber-400/50 flex items-center justify-center bg-[#091525] shadow-[0_0_16px_rgba(245,158,11,0.25)] group-hover:border-amber-300 group-hover:shadow-[0_0_22px_rgba(245,158,11,0.45)] transition-all overflow-hidden p-1">
+          {/* Cloud & Thunderbolt Logo - Pure without circle/box */}
+          <div className="relative flex items-center justify-center">
             <img 
               src="/toofan-logo.png" 
-              alt="ToofanOS Thunderbolt Logo" 
-              className="w-full h-full object-contain filter drop-shadow-[0_0_6px_rgba(245,158,11,0.6)]" 
+              alt="ToofanOS" 
+              className="w-10 h-10 object-contain drop-shadow-[0_0_12px_rgba(245,158,11,0.45)] transition-transform group-hover:scale-105" 
             />
           </div>
 
